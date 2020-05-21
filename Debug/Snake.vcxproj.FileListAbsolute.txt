@@ -1,0 +1,2 @@
+C:\Projects\C++\Snake\Snake\Debug\Snake.exe
+C:\Projects\C++\Snake\Snake\Debug\Snake.pdb
