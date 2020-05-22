@@ -17,8 +17,6 @@ Snake::~Snake() {}
 
 void Snake::turn(char direction)
 {
-	// TODO: Sanity check input.
-
 	_direction = direction;
 }
 

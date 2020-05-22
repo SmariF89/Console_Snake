@@ -19,8 +19,6 @@ public:
 	char getDirection();
 
 private:
-	void changeDirection(char direction);
-
 	char _head;
 	int _length;
 	int _maxLength;

@@ -2,21 +2,21 @@
 
 Game::Game() 
 {
-	inputThread = new std::thread(this->playerInput);
+	_gameOver = false;
+	_score = 0;
+	_difficulty = 'm';
 }
 
 Game::~Game() 
 {
 	delete _board;
-	inputThread->join();
-	delete inputThread;
 }
 
 void Game::start()
 {
 	initialize();
 	_board->printBoard();
-	while (!gameOver())
+	while (!_gameOver)
 	{
 		progress();
 	}
@@ -28,7 +28,6 @@ void Game::initialize()
 		delete _board;
 	
 	_board = new Board();
-	_score = 0;
 }
 
 void Game::progress()
@@ -42,21 +41,26 @@ void Game::score()
 	_score++;
 }
 
-bool Game::gameOver()
+bool& Game::gameOver()
 {
-	return false;
+	return _gameOver;
 }
 
-void Game::playerInput()
+void Game::playerInput(char input)
 {
-	while(!gameOver())
-	{
-		char input;
-		std::cin >> input;
+	char translatedInput = this->translateInput(input);
+	if (translatedInput == 'u' ||
+		translatedInput == 'l' ||
+		translatedInput == 'd' ||
+		translatedInput == 'r')
+		_board->redirectSnake(translatedInput);
+}
 
-		if (input == 'w' || input == 'a' || input == 's' || input == 'd')
-		{
-			_board->redirectSnake(input);
-		}
-	}
+char Game::translateInput(char input)
+{
+	if (input == 'W' || input == 'w') { return 'u'; }
+	if (input == 'A' || input == 'a') { return 'l'; }
+	if (input == 'S' || input == 's') { return 'd'; }
+	if (input == 'D' || input == 'd') { return 'r'; }
+	return ' ';
 }

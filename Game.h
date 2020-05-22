@@ -16,21 +16,21 @@ public:
 	~Game();
 
 	void start();
+	bool& gameOver();
+	void playerInput(char input);
 
 private:
 	void initialize();
 	void progress();
 
 	void score();
-	bool gameOver();
 
-	void playerInput();
+	char translateInput(char input);
 
+	bool _gameOver;
 	int _score;
-	int _difficulty;
+	char _difficulty;
 	Board* _board;
-
-	std::thread* inputThread;
 };
 
 #endif // GAME_H
