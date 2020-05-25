@@ -2,9 +2,10 @@
 
 #include <iostream>
 
-Board::Board() 
+Board::Board(bool* gameOver) 
 {
 	_board = new char* [BOARD_SIZE_VERTICAL];
+	_gameOver = gameOver;
 
 	for (int i = 0; i < BOARD_SIZE_VERTICAL; i++)
 	{
@@ -16,6 +17,9 @@ Board::Board()
 	}
 
 	initializeBorders();
+	
+	_fruit = new Fruit(BOARD_SIZE_VERTICAL, BOARD_SIZE_HORIZONTAL);
+	fruitManagementThread = new std::thread(&Board::fruitManager, this);
 }
 
 Board::~Board() 
@@ -24,7 +28,10 @@ Board::~Board()
 	{
 		delete _board[i];
 	}
+
+	fruitManagementThread->join();
 	delete _board;
+	delete _fruit;
 }
 
 void Board::initializeBorders()
@@ -90,6 +97,7 @@ void Board::moveSnake()
 	printSnake(currentSnakePosition, newSnakePosition);
 }
 
+
 void Board::redirectSnake(char direction)
 {
 	if (_snake.getDirection() == direction)
@@ -98,8 +106,30 @@ void Board::redirectSnake(char direction)
 	_snake.turn(direction);
 }
 
+void Board::fruitManager()
+{
+	while (!*_gameOver)
+	{
+		spawnFruit();
+		std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+	}
+}
+
+void Board::spawnFruit()
+{
+	std::lock_guard<std::mutex> guard(printMutex);
+
+	Position oldFruitPosition = _fruit->getPosition();
+	_fruit->spawn();
+	Position newFruitPosition = _fruit->getPosition();
+	
+	printFruit(oldFruitPosition, newFruitPosition);
+}
+
 void Board::printBoard()
 {
+	std::lock_guard<std::mutex> guard(printMutex);
+
 	for (int i = 0; i < BOARD_SIZE_VERTICAL; i++)
 	{
 		for (int j = 0; j < BOARD_SIZE_HORIZONTAL; j++)
@@ -113,11 +143,24 @@ void Board::printBoard()
 
 void Board::printSnake(Position oldPosition, Position newPosition)
 {
+	std::lock_guard<std::mutex> guard(printMutex);
+
 	setPrintPosition(oldPosition.x, oldPosition.y);
 	std::cout << ' ';
 	
 	setPrintPosition(newPosition.x, newPosition.y);
 	std::cout << SNAKE_MATERIAL;
+
+	std::cout.flush();
+}
+
+void Board::printFruit(Position oldPosition, Position newPosition)
+{
+	setPrintPosition(oldPosition.x, oldPosition.y);
+	std::cout << ' ';
+
+	setPrintPosition(newPosition.x, newPosition.y);
+	std::cout << FRUIT_MATERIAL;
 
 	std::cout.flush();
 }

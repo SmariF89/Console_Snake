@@ -27,7 +27,7 @@ void Game::initialize()
 	if (_board != nullptr)
 		delete _board;
 	
-	_board = new Board();
+	_board = new Board(&_gameOver);
 }
 
 void Game::progress()

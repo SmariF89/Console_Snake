@@ -1,8 +1,5 @@
 #include "Snake.h"
 
-#define MAX_SNAKE_LENGTH 20;
-#define SNAKE_MATERIAL '*';
-
 Snake::Snake()
 {
 	_head = SNAKE_MATERIAL;
@@ -10,7 +7,7 @@ Snake::Snake()
 	_maxLength = MAX_SNAKE_LENGTH;
 	_position.x = 12;
 	_position.y = 20;
-	_direction = 'd';
+	_direction = 'r';
 }
 
 Snake::~Snake() {}

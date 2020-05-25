@@ -5,6 +5,9 @@
 
 #include "Position.h"
 
+#define MAX_SNAKE_LENGTH 20
+#define SNAKE_MATERIAL '*'
+
 class Snake
 {
 public:
