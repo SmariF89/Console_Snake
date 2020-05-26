@@ -21,6 +21,11 @@
 #define FRUIT_MATERIAL 'Q'
 #define BORDER_MATERIAL '#'
 
+#define SCORE_X (BOARD_SIZE_VERTICAL + 3)
+#define SCORE_Y 3
+
+#define FRUIT_DELAY 5000
+
 class Board
 {
 public:
@@ -28,6 +33,8 @@ public:
 	~Board();
 
 	void moveSnake();
+	bool hitFruit();
+	void updateScore(int score);
 	void redirectSnake(char direction);
 	void printBoard();
 
@@ -38,9 +45,11 @@ private:
 
 	void printSnake(Position oldPosition, Position newPosition);
 	void printFruit(Position oldPosition, Position newPosition);
+	void printScore(int score);
 	void setPrintPosition(int x, int y);
 
 	bool* _gameOver;
+	bool _hitFruit;
 	std::thread* fruitManagementThread;
 	std::mutex printMutex;
 

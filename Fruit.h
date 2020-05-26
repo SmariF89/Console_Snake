@@ -24,9 +24,6 @@ private:
 	void vanish();
 	int getRandomCoordinate(bool x);
 
-	int _score;
-	int _timeLeft;
-
 	int _maxCoordinateX;
 	int _maxCoordinateY;
 

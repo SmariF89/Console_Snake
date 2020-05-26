@@ -2,8 +2,6 @@
 
 Fruit::Fruit(int boardVerticalSize, int boardHorizontalSize)
 {
-	_score = DEFAULT_SCORE;
-	_timeLeft = 0;
 	_position.x = 3;
 	_position.y = 3;
 	_maxCoordinateX = boardVerticalSize - 3;
@@ -15,7 +13,6 @@ void Fruit::spawn()
 {
 	_position.x = getRandomCoordinate(true);
 	_position.y = getRandomCoordinate(false);
-	_timeLeft = DEFAULT_TIME;
 }
 
 Position Fruit::getPosition()

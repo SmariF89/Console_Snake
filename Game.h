@@ -9,6 +9,8 @@
 #include <thread>
 #include <chrono>
 
+#define SCORE_AMOUNT 1
+
 class Game
 {
 public:

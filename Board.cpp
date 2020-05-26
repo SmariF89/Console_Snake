@@ -57,6 +57,7 @@ void Board::moveSnake()
 	Position newSnakePosition;
 	char currentSnakeDirection = _snake.getDirection();
 	char nextCellContent = ' ';
+	char newCellContent = ' ';
 	
 	switch (currentSnakeDirection)
 	{
@@ -94,9 +95,27 @@ void Board::moveSnake()
 	}
 	
 	newSnakePosition = _snake.getPosition();
+	newCellContent = _board[newSnakePosition.x][newSnakePosition.y];
+
+	if (newCellContent == FRUIT_MATERIAL)
+	{
+		_hitFruit = true;
+	}
+	
 	printSnake(currentSnakePosition, newSnakePosition);
 }
 
+bool Board::hitFruit()
+{
+	bool result = _hitFruit;
+	if (_hitFruit) { _hitFruit = false; }
+	return result;
+}
+
+void Board::updateScore(int score)
+{
+	printScore(score);
+}
 
 void Board::redirectSnake(char direction)
 {
@@ -111,7 +130,7 @@ void Board::fruitManager()
 	while (!*_gameOver)
 	{
 		spawnFruit();
-		std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+		std::this_thread::sleep_for(std::chrono::milliseconds(FRUIT_DELAY));
 	}
 }
 
@@ -122,6 +141,8 @@ void Board::spawnFruit()
 	Position oldFruitPosition = _fruit->getPosition();
 	_fruit->spawn();
 	Position newFruitPosition = _fruit->getPosition();
+
+	_board[newFruitPosition.x][newFruitPosition.y] = FRUIT_MATERIAL;
 	
 	printFruit(oldFruitPosition, newFruitPosition);
 }
@@ -161,6 +182,16 @@ void Board::printFruit(Position oldPosition, Position newPosition)
 
 	setPrintPosition(newPosition.x, newPosition.y);
 	std::cout << FRUIT_MATERIAL;
+
+	std::cout.flush();
+}
+
+void Board::printScore(int score)
+{
+	std::lock_guard<std::mutex> guard(printMutex);
+
+	setPrintPosition(SCORE_X, SCORE_Y);
+	std::cout << score;
 
 	std::cout.flush();
 }
