@@ -21,8 +21,10 @@
 #define FRUIT_MATERIAL 'Q'
 #define BORDER_MATERIAL '#'
 
-#define SCORE_X (BOARD_SIZE_VERTICAL + 3)
-#define SCORE_Y 3
+#define SCORE_LABEL_POSITION_X (BOARD_SIZE_VERTICAL + 2)
+#define SCORE_LABEL_POSITION_Y 0
+#define SCORE_POSITION_X	   (BOARD_SIZE_VERTICAL + 2)
+#define SCORE_POSITION_Y	   12
 
 #define FRUIT_DELAY 5000
 
@@ -40,6 +42,7 @@ public:
 
 private:
 	void initializeBorders();
+	void initializeScore();
 	void fruitManager();
 	void spawnFruit();
 

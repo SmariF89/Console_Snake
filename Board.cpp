@@ -17,6 +17,7 @@ Board::Board(bool* gameOver)
 	}
 
 	initializeBorders();
+	initializeScore();
 	
 	_fruit = new Fruit(BOARD_SIZE_VERTICAL, BOARD_SIZE_HORIZONTAL);
 	fruitManagementThread = new std::thread(&Board::fruitManager, this);
@@ -49,6 +50,17 @@ void Board::initializeBorders()
 		_board[0][i] = BORDER_MATERIAL;
 		_board[BOARD_SIZE_VERTICAL - 1][i] = BORDER_MATERIAL;
 	}
+}
+
+void Board::initializeScore()
+{
+	std::lock_guard<std::mutex> guard(printMutex);
+
+	setPrintPosition(SCORE_LABEL_POSITION_X, SCORE_LABEL_POSITION_Y);
+	std::cout << "Your score: 0";
+
+	setPrintPosition(0, 0);
+	std::cout.flush();
 }
 
 void Board::moveSnake()
@@ -190,7 +202,7 @@ void Board::printScore(int score)
 {
 	std::lock_guard<std::mutex> guard(printMutex);
 
-	setPrintPosition(SCORE_X, SCORE_Y);
+	setPrintPosition(SCORE_POSITION_X, SCORE_POSITION_Y);
 	std::cout << score;
 
 	std::cout.flush();

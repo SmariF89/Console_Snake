@@ -9,7 +9,7 @@
 #include <thread>
 #include <chrono>
 
-#define SCORE_AMOUNT 1
+#define SCORE_AMOUNT 2
 
 class Game
 {
