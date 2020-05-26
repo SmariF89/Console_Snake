@@ -6,12 +6,14 @@
 #include "Snake.h"
 #include "Fruit.h"
 #include "Position.h"
+#include "SnakePart.h"
 
 #include <iostream>
 #include <Windows.h>
 #include <thread>
 #include <mutex>
 #include <chrono>
+#include <vector>
 
 
 #define BOARD_SIZE_VERTICAL 25
@@ -46,7 +48,7 @@ private:
 	void fruitManager();
 	void spawnFruit();
 
-	void printSnake(Position oldPosition, Position newPosition);
+	void printSnake(std::vector<SnakePart> oldBody, std::vector<SnakePart> newBody);
 	void printFruit(Position oldPosition, Position newPosition);
 	void printScore(int score);
 	void setPrintPosition(int x, int y);

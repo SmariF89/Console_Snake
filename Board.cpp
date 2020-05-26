@@ -65,8 +65,12 @@ void Board::initializeScore()
 
 void Board::moveSnake()
 {
-	Position currentSnakePosition = _snake.getPosition();
-	Position newSnakePosition;
+	Position currentSnakeHeadPosition = _snake.getHeadPosition();
+	Position newSnakeHeadPosition;
+	
+	std::vector<SnakePart> currentSnakeBody = _snake.getSnakePosition();
+	std::vector<SnakePart> newSnakeBody;
+
 	char currentSnakeDirection = _snake.getDirection();
 	char nextCellContent = ' ';
 	char newCellContent = ' ';
@@ -74,47 +78,48 @@ void Board::moveSnake()
 	switch (currentSnakeDirection)
 	{
 	case 'l':
-		nextCellContent = _board[currentSnakePosition.x][currentSnakePosition.y - 1];
+		nextCellContent = _board[currentSnakeHeadPosition.x][currentSnakeHeadPosition.y - 1];
 		if (nextCellContent == BORDER_MATERIAL)
-			_snake.updatePosition(true, currentSnakePosition.x, BOARD_SIZE_HORIZONTAL - 2);
+			_snake.updatePosition(true, currentSnakeHeadPosition.x, BOARD_SIZE_HORIZONTAL - 2);
 		else
 			_snake.updatePosition(false, 0, 0);
 		break;
 
 	case 'r':
-		nextCellContent = _board[currentSnakePosition.x][currentSnakePosition.y + 1];
+		nextCellContent = _board[currentSnakeHeadPosition.x][currentSnakeHeadPosition.y + 1];
 		if (nextCellContent == BORDER_MATERIAL)
-			_snake.updatePosition(true, currentSnakePosition.x, 1);
+			_snake.updatePosition(true, currentSnakeHeadPosition.x, 1);
 		else
 			_snake.updatePosition(false, 0, 0);
 		break;
 
 	case 'u':
-		nextCellContent = _board[currentSnakePosition.x - 1][currentSnakePosition.y];
+		nextCellContent = _board[currentSnakeHeadPosition.x - 1][currentSnakeHeadPosition.y];
 		if (nextCellContent == BORDER_MATERIAL)
-			_snake.updatePosition(true, BOARD_SIZE_VERTICAL - 2, currentSnakePosition.y);
+			_snake.updatePosition(true, BOARD_SIZE_VERTICAL - 2, currentSnakeHeadPosition.y);
 		else
 			_snake.updatePosition(false, 0, 0);
 		break;
 
 	case 'd':
-		nextCellContent = _board[currentSnakePosition.x + 1][currentSnakePosition.y - 1];
+		nextCellContent = _board[currentSnakeHeadPosition.x + 1][currentSnakeHeadPosition.y - 1];
 		if (nextCellContent == BORDER_MATERIAL)
-			_snake.updatePosition(true, 1, currentSnakePosition.y);
+			_snake.updatePosition(true, 1, currentSnakeHeadPosition.y);
 		else
 			_snake.updatePosition(false, 0, 0);
 		break;
 	}
 	
-	newSnakePosition = _snake.getPosition();
-	newCellContent = _board[newSnakePosition.x][newSnakePosition.y];
-
+	newSnakeBody = _snake.getSnakePosition();
+	newSnakeHeadPosition = newSnakeBody[0].currentPosition;
+	
+	newCellContent = _board[newSnakeHeadPosition.x][newSnakeHeadPosition.y];
 	if (newCellContent == FRUIT_MATERIAL)
 	{
 		_hitFruit = true;
 	}
 	
-	printSnake(currentSnakePosition, newSnakePosition);
+	printSnake(currentSnakeBody, newSnakeBody);
 }
 
 bool Board::hitFruit()
@@ -131,6 +136,7 @@ void Board::updateScore(int score)
 
 void Board::redirectSnake(char direction)
 {
+	// TODO: Move all sanity checks to one place.
 	if (_snake.getDirection() == direction)
 		return;
 
@@ -174,15 +180,18 @@ void Board::printBoard()
 	std::cout.flush();
 }
 
-void Board::printSnake(Position oldPosition, Position newPosition)
+void Board::printSnake(std::vector<SnakePart> oldBody, std::vector<SnakePart> newBody)
 {
 	std::lock_guard<std::mutex> guard(printMutex);
 
-	setPrintPosition(oldPosition.x, oldPosition.y);
-	std::cout << ' ';
+	for (size_t i = 0; i < oldBody.size(); i++)
+	{
+		setPrintPosition(oldBody[i].currentPosition.x, oldBody[i].currentPosition.y);
+		std::cout << ' ';
 	
-	setPrintPosition(newPosition.x, newPosition.y);
-	std::cout << SNAKE_MATERIAL;
+		setPrintPosition(newBody[i].currentPosition.x, newBody[i].currentPosition.y);
+		std::cout << SNAKE_MATERIAL;
+	}
 
 	std::cout.flush();
 }

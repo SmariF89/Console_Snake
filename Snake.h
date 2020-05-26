@@ -3,10 +3,15 @@
 #ifndef SNAKE_H
 #define SNAKE_H
 
-#include "Position.h"
+#include "SnakePart.h"
+#include <vector>
 
-#define MAX_SNAKE_LENGTH 20
-#define SNAKE_MATERIAL '*'
+#define START_LENGTH 4
+#define START_DIRECTION 'r'
+#define HEAD 0
+
+#define HEAD_START_X 12
+#define HEAD_START_Y 20
 
 class Snake
 {
@@ -18,17 +23,14 @@ public:
 	void updatePosition(bool border, int x, int y);
 	void grow();
 
-	Position getPosition();
+	Position getHeadPosition();
+	std::vector<SnakePart> getSnakePosition();
 	char getDirection();
 
 private:
-	char _head;
-	int _length;
-	int _maxLength;
-
-	Position _position;
-
+	std::vector<SnakePart> _body;
 	char _direction;
+	int _length;
 };
 
 #endif // SNAKE_H

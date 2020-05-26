@@ -1,45 +1,88 @@
 #include "Snake.h"
 
+/*
+	Initial snake vector looks like this:
+					 _									  _
+	currentPosition	|  (12,20), (12,19), (12,18), (12,17)  |
+	nextPosition	|_ (0 , 0), (12,20), (12,19), (12,18) _|
+*/
+
 Snake::Snake()
 {
-	_head = SNAKE_MATERIAL;
-	_length = 1;
-	_maxLength = MAX_SNAKE_LENGTH;
-	_position.x = 12;
-	_position.y = 20;
-	_direction = 'r';
+	_length = START_LENGTH;
+	_direction = START_DIRECTION;
+
+	int bodyOffset = 1;
+	for (int i = 0; i < _length; i++)
+	{
+		SnakePart snakePart;
+		snakePart.currentPosition.x = HEAD_START_X;
+		snakePart.currentPosition.y = HEAD_START_Y - i;
+		
+		// The head does not have a next position.
+		if (i == 0) 
+		{ 
+			snakePart.nextPosition.x = 0;
+			snakePart.nextPosition.y = 0;
+		}
+		else
+		{
+			snakePart.nextPosition.x = HEAD_START_X;
+			snakePart.nextPosition.y = i == 1 ? HEAD_START_Y : HEAD_START_Y - bodyOffset++;
+		}
+
+		_body.push_back(snakePart);
+	}
 }
 
 Snake::~Snake() {}
 
 void Snake::turn(char direction)
 {
+	// Snake's internal input sanitization.
+	// The snake cannot turn in its opposite direction.
+	if (_direction == 'l' && direction == 'r') { return; }
+	if (_direction == 'r' && direction == 'l') { return; }
+	if (_direction == 'u' && direction == 'd') { return; }
+	if (_direction == 'd' && direction == 'u') { return; }
+	
 	_direction = direction;
 }
 
 void Snake::updatePosition(bool border, int x, int y)
 {
+	// The head moves...
 	if (border)
 	{
-		_position.x = x;
-		_position.y = y;
+		_body[HEAD].currentPosition.x = x;
+		_body[HEAD].currentPosition.y = y;
 	}
 	else
 	{
 		switch (_direction)
 		{
 		case 'l':
-			_position.y -= 1;
+			_body[HEAD].currentPosition.y -= 1;
 			break;
 		case 'r':
-			_position.y += 1;
+			_body[HEAD].currentPosition.y += 1;
 			break;
 		case 'u':
-			_position.x -= 1;
+			_body[HEAD].currentPosition.x -= 1;
 			break;
 		case 'd':
-			_position.x += 1;
+			_body[HEAD].currentPosition.x += 1;
 		}
+	}
+
+	// ...and the body will follow!
+	for (int i = 1; i < _length; i++)
+	{
+		_body[i].currentPosition.x = _body[i].nextPosition.x;
+		_body[i].currentPosition.y = _body[i].nextPosition.y;
+
+		_body[i].nextPosition.x = _body[i - 1].currentPosition.x;
+		_body[i].nextPosition.y = _body[i - 1].currentPosition.y;
 	}
 }
 
@@ -49,9 +92,14 @@ void Snake::grow()
 	_length++;
 }
 
-Position Snake::getPosition()
+Position Snake::getHeadPosition()
 {
-	return _position;
+	return _body[HEAD].currentPosition;
+}
+
+std::vector<SnakePart> Snake::getSnakePosition()
+{
+	return _body;
 }
 
 char Snake::getDirection()
