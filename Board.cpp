@@ -120,6 +120,13 @@ void Board::moveSnake()
 		_snake.grow();
 		newSnakeBody = _snake.getSnakePosition();
 	}
+	else if (newCellContent == SNAKE_MATERIAL)
+	{
+		// The snake cannot hit itself - An endgame state has been reached.
+		_hitSnake = true;
+		std::cout << "GAME OVER"; // TEMPORARY - DELETE LATER
+		return;
+	}
 	
 	printSnake(currentSnakeBody, newSnakeBody);
 }
@@ -129,6 +136,11 @@ bool Board::hitFruit()
 	bool result = _hitFruit;
 	if (_hitFruit) { _hitFruit = false; }
 	return result;
+}
+
+bool Board::hitSnake()
+{
+	return _hitSnake;
 }
 
 void Board::updateScore(int score)
@@ -192,10 +204,12 @@ void Board::printSnake(std::vector<SnakePart> oldBody, std::vector<SnakePart> ne
 		if (i < oldBodyLength)
 		{
 			setPrintPosition(oldBody[i].currentPosition.x, oldBody[i].currentPosition.y);
+			_board[oldBody[i].currentPosition.x][oldBody[i].currentPosition.y] = ' ';
 			std::cout << ' ';
 		}
 	
 		setPrintPosition(newBody[i].currentPosition.x, newBody[i].currentPosition.y);
+		_board[newBody[i].currentPosition.x][newBody[i].currentPosition.y] = SNAKE_MATERIAL;
 		std::cout << SNAKE_MATERIAL;
 	}
 

@@ -38,6 +38,7 @@ public:
 
 	void moveSnake();
 	bool hitFruit();
+	bool hitSnake();
 	void updateScore(int score);
 	void redirectSnake(char direction);
 	void printBoard();
@@ -55,6 +56,7 @@ private:
 
 	bool* _gameOver;
 	bool _hitFruit;
+	bool _hitSnake;
 	std::thread* fruitManagementThread;
 	std::mutex printMutex;
 

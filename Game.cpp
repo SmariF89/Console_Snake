@@ -34,6 +34,10 @@ void Game::progress()
 {
 	_board->moveSnake();
 	if (_board->hitFruit()) { score(); }
+	if (_board->hitSnake()) 
+	{ 
+		_gameOver = true;
+	}
 	std::this_thread::sleep_for(std::chrono::milliseconds(100));
 }
 
