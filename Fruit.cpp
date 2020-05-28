@@ -13,6 +13,9 @@ void Fruit::spawn()
 {
 	_position.x = getRandomCoordinate(true);
 	_position.y = getRandomCoordinate(false);
+
+	// _position.x = 12;
+	// _position.y = 24;
 }
 
 Position Fruit::getPosition()

@@ -1,4 +1,6 @@
 ﻿  Board.cpp
-  main.cpp
+C:\Projects\C++\Snake\Snake\Board.cpp(192,9): warning C4018: '<': signed/unsigned mismatch
+  Fruit.cpp
+C:\Projects\C++\Snake\Snake\Fruit.cpp(33,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   Generating Code...
   Snake.vcxproj -> C:\Projects\C++\Snake\Snake\Debug\Snake.exe

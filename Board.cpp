@@ -117,6 +117,8 @@ void Board::moveSnake()
 	if (newCellContent == FRUIT_MATERIAL)
 	{
 		_hitFruit = true;
+		_snake.grow();
+		newSnakeBody = _snake.getSnakePosition();
 	}
 	
 	printSnake(currentSnakeBody, newSnakeBody);
@@ -184,10 +186,14 @@ void Board::printSnake(std::vector<SnakePart> oldBody, std::vector<SnakePart> ne
 {
 	std::lock_guard<std::mutex> guard(printMutex);
 
-	for (size_t i = 0; i < oldBody.size(); i++)
+	int oldBodyLength = oldBody.size();
+	for (size_t i = 0; i < newBody.size(); i++)
 	{
-		setPrintPosition(oldBody[i].currentPosition.x, oldBody[i].currentPosition.y);
-		std::cout << ' ';
+		if (i < oldBodyLength)
+		{
+			setPrintPosition(oldBody[i].currentPosition.x, oldBody[i].currentPosition.y);
+			std::cout << ' ';
+		}
 	
 		setPrintPosition(newBody[i].currentPosition.x, newBody[i].currentPosition.y);
 		std::cout << SNAKE_MATERIAL;

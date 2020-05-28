@@ -11,6 +11,10 @@ Snake::Snake()
 {
 	_length = START_LENGTH;
 	_direction = START_DIRECTION;
+	
+	// Initialized but not used in initial state.
+	_tailPreviousPositionX = 0;
+	_tailPreviousPositionY = 0;
 
 	int bodyOffset = 1;
 	for (int i = 0; i < _length; i++)
@@ -75,6 +79,9 @@ void Snake::updatePosition(bool border, int x, int y)
 		}
 	}
 
+	_tailPreviousPositionX = _body[TAIL].currentPosition.x;
+	_tailPreviousPositionY = _body[TAIL].currentPosition.y;
+
 	// ...and the body will follow!
 	for (int i = 1; i < _length; i++)
 	{
@@ -86,9 +93,17 @@ void Snake::updatePosition(bool border, int x, int y)
 	}
 }
 
-// NOTE: Not used in alpha.
 void Snake::grow()
 {
+	SnakePart addition;
+
+	addition.currentPosition.x = _tailPreviousPositionX;
+	addition.currentPosition.y = _tailPreviousPositionY;
+
+	addition.nextPosition.x = _body[TAIL].currentPosition.x;
+	addition.nextPosition.y = _body[TAIL].currentPosition.y;
+
+	_body.push_back(addition);
 	_length++;
 }
 
