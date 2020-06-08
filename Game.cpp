@@ -4,6 +4,7 @@ Game::Game()
 {
 	_gameOver = false;
 	_score = 0;
+	_speed = SPEED_INITIAL;
 	_difficulty = 'm';
 
 	playerInputThread = new std::thread(&Game::playerInput, this);
@@ -38,13 +39,22 @@ void Game::progress()
 	_board->moveSnake();
 	if (_board->hitFruit()) { score(); }
 	if (_board->hitSnake()) { _gameOver = true; }
-	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	std::this_thread::sleep_for(std::chrono::milliseconds(_speed));
 }
 
 void Game::score()
 {
 	_score += SCORE_AMOUNT;
+	this->increaseSpeed();
 	_board->updateScore(_score);
+}
+
+void Game::increaseSpeed()
+{
+	if (_speed >= SPEED_MAX)
+	{
+		_speed -= SPEED_DIFF;
+	}
 }
 
 void Game::affectGame(char input)

@@ -29,6 +29,9 @@
 /* ---------------------------------- */
 
 #define SCORE_AMOUNT 2
+#define SPEED_INITIAL 150
+#define SPEED_MAX 25
+#define SPEED_DIFF 5
 
 class Game
 {
@@ -43,6 +46,7 @@ private:
 	void progress();
 
 	void score();
+	void increaseSpeed();
 
 	void affectGame(char input);
 	void playerInput();
@@ -50,6 +54,7 @@ private:
 
 	bool _gameOver;
 	int _score;
+	int _speed;
 	char _difficulty;
 	Board* _board;
 
